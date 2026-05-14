@@ -20,7 +20,7 @@ if page == "Home":
     This application helps you **record income and expenses**, track your history, and understand your spending habits with ease.
     """)
 # --- ADD TRANSACTION PAGE ---
-if page == "Add Transaction":
+elif page == "Add Transaction":
 
     st.header("➕ Add New Transaction")
 
@@ -176,3 +176,56 @@ if page == "Add Transaction":
 
     else:
         st.info("No transactions recorded yet.")
+# --- VIEW TRANSACTIONS PAGE ---
+elif page == "View Transactions":
+
+    st.header("📜 Transaction History")
+
+    if st.session_state.transactions:
+
+        df = pd.DataFrame(st.session_state.transactions)
+
+        df = df[
+            ["type", "category", "amount", "date", "description"]
+        ]
+
+        st.table(df)
+
+    else:
+        st.info("No transactions recorded yet.")
+# --- SUMMARY PAGE ---
+elif page == "Summary":
+
+    st.header("📊 Expense Summary")
+
+    if st.session_state.transactions:
+
+        df = pd.DataFrame(st.session_state.transactions)
+
+        total_income = df[df["type"] == "Income"]["amount"].sum()
+
+        total_expense = df[df["type"] == "Expense"]["amount"].sum()
+
+        balance = total_income - total_expense
+
+        st.success(f"Total Income: ₹ {total_income:.2f}")
+
+        st.error(f"Total Expenses: ₹ {total_expense:.2f}")
+
+        st.info(f"Remaining Balance: ₹ {balance:.2f}")
+
+        expense_df = df[df["type"] == "Expense"]
+
+        if not expense_df.empty:
+
+            category_summary = (
+                expense_df.groupby("category")["amount"]
+                .sum()
+            )
+
+            st.subheader("Category-wise Spending")
+
+            st.bar_chart(category_summary)
+
+    else:
+        st.info("No transactions available.")        

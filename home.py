@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from datetime import date
-
 # --- PAGE CONFIGURATION ---
 st.set_page_config(page_title="Personal Expense Tracker", layout="wide")
 
